@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>sasuty proxy v1</title>
     <link rel="icon" type="image/x-icon" href="/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -30,6 +30,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            position: fixed;
+            width: 100%;
         }
 
         /* --- Boot Animation (Pulse) --- */
@@ -48,8 +50,18 @@
         .boot-progress-bar { width: 0%; height: 100%; background: #4285f4; transition: width 0.3s; }
 
         /* --- Browser Layout --- */
-        .app-container { height: 100vh; display: flex; flex-direction: column; }
-        .browser-header { background: var(--chrome-header); padding: 6px 6px 0 6px; display: flex; align-items: flex-end; }
+        .app-container { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* 固定ヘッダー領域 */
+        .browser-header { 
+            background: var(--chrome-header); 
+            padding: 6px 6px 0 6px; 
+            display: flex; 
+            align-items: flex-end; 
+            flex-shrink: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
         .tab-bar { display: flex; align-items: center; gap: 2px; flex: 1; overflow: hidden; }
 
         .tab {
@@ -69,26 +81,39 @@
 
         .new-tab-btn { background: none; border: none; padding: 8px; cursor: pointer; color: var(--text-dim); }
 
-        .nav-bar { padding: 8px 16px; display: flex; align-items: center; gap: 10px; background: var(--chrome-tab-active); border-bottom: 1px solid var(--chrome-border); }
+        /* 固定ナビゲーションバー領域 */
+        .nav-bar { 
+            padding: 8px 16px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            background: var(--chrome-tab-active); 
+            border-bottom: 1px solid var(--chrome-border); 
+            flex-shrink: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .nav-controls { display: flex; gap: 4px; }
         .nav-btn { background: none; border: none; color: var(--text-dim); width: 30px; height: 30px; cursor: pointer; border-radius: 50%; }
         .nav-btn:hover { background: #f1f3f4; color: var(--text-main); }
         .address-bar-container { flex: 1; position: relative; }
-        .address-bar { width: 100%; height: 34px; background: #f1f3f4; border: 1px solid transparent; border-radius: 20px; padding: 0 40px; color: var(--text-main); font-size: 0.9rem; }
-        .address-bar:focus { background: #fff; border: 1px solid #dadce0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .address-bar { width: 100%; height: 34px; background: #f1f3f4; border: 1px solid transparent; border-radius: 20px; padding: 0 40px; color: var(--text-main); font-size: 0.9rem; -webkit-appearance: none; }
+        .address-bar:focus { background: #fff; border: 1px solid #dadce0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); outline: none; }
         .bar-icon { position: absolute; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 0.85rem; }
         .bar-icon.search { left: 16px; }
         .bar-icon.reload { right: 16px; cursor: pointer; }
 
-        .viewport-container { flex: 1; position: relative; background: #fff; }
-        .tab-content { position: absolute; inset: 0; display: none; animation: fadeIn 0.3s; }
+        .viewport-container { flex: 1; position: relative; background: #fff; overflow: hidden; }
+        .tab-content { position: absolute; inset: 0; display: none; animation: fadeIn 0.3s; overflow: hidden; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        iframe { width: 100%; height: 100%; border: none; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
 
         /* Start Page */
-        .start-page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
-        .start-logo { font-size: 2.5rem; font-weight: 500; color: #5f6368; margin-bottom: 20px; }
-        .mega-search { width: 100%; max-width: 500px; padding: 12px 20px; border-radius: 24px; border: 1px solid #dfe1e5; box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+        .start-page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; overflow-y: auto; padding: 20px; }
+        .start-logo { font-size: 2.5rem; font-weight: 500; color: #5f6368; margin-bottom: 20px; user-select: none; -webkit-user-select: none; }
+        .mega-search { width: 100%; max-width: 500px; padding: 12px 20px; border-radius: 24px; border: 1px solid #dfe1e5; box-shadow: 0 1px 6px rgba(0,0,0,0.1); -webkit-appearance: none; }
+        .mega-search:focus { outline: none; border-color: var(--elixir-primary); }
         .quick-links { margin-top: 30px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
         .q-link { text-decoration: none; color: var(--text-dim); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.75rem; user-select: none; -webkit-user-select: none; }
         .q-link i { width: 40px; height: 40px; border-radius: 50%; background: #f1f3f4; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: background 0.2s; }
@@ -107,8 +132,9 @@
         .modal h3 { font-size: 1.1rem; color: var(--text-main); font-weight: 500; margin-bottom: 4px; }
         .modal input, .modal select { 
             width: 100%; padding: 10px 14px; border: 1px solid var(--chrome-border); 
-            border-radius: 8px; font-size: 0.9rem; background: #f8f9fa; transition: 0.2s;
+            border-radius: 8px; font-size: 0.9rem; background: #f8f9fa; transition: 0.2s; -webkit-appearance: none;
         }
+        .modal select { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%235f6368' d='M0 0l5 5 5-5z'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; background-size: 10px; }
         .modal input:focus, .modal select:focus { outline: none; border-color: var(--elixir-primary); background: #fff; }
         .modal-buttons { display: flex; gap: 8px; margin-top: 8px; }
         .modal button { 
@@ -123,6 +149,32 @@
         
         .frame-loader { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: #4285f4; display: none; }
         .frame-loader.active { display: block; }
+
+        /* --- Floating Panic Button --- */
+        #panic-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 26px;
+            height: 26px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            cursor: move;
+            z-index: 10000;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+        #panic-button:active {
+            background-color: #222222;
+        }
     </style>
 </head>
 <body>
@@ -191,6 +243,8 @@
         </div>
     </div>
 
+    <button id="panic-button"><i class="fa-solid fa-exclamation"></i></button>
+
     <script>
         let tabs = [];
         let activeTabId = null;
@@ -217,6 +271,7 @@
                 bar.style.width = progress + '%';
             }, 200);
             addNewTab();
+            initPanicButton();
         };
 
         function getProxyUrl(input) {
@@ -371,6 +426,81 @@
         function reloadFrame() { const f = document.getElementById('frame-' + activeTabId); if (f) f.src = f.src; }
         function goBack() { const f = document.getElementById('frame-' + activeTabId); if (f) try { f.contentWindow.history.back(); } catch(e) {} }
         function goForward() { const f = document.getElementById('frame-' + activeTabId); if (f) try { f.contentWindow.history.forward(); } catch(e) {} }
+
+        /* --- Panic Button Logic (Drag & Click) --- */
+        function initPanicButton() {
+            const btn = document.getElementById('panic-button');
+            let isDragging = false;
+            let dragStarted = false;
+            let startX, startY, initialX, initialY;
+
+            function startDrag(e) {
+                isDragging = false;
+                dragStarted = true;
+                
+                // iPad / タッチイベントとマウスイベントの統合ハンドリング
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                startX = clientX;
+                startY = clientY;
+                
+                const rect = btn.getBoundingClientRect();
+                initialX = rect.left;
+                initialY = rect.top;
+            }
+
+            function doDrag(e) {
+                if (!dragStarted) return;
+                
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                const dx = clientX - startX;
+                const dy = clientY - startY;
+
+                // 誤判定防止しつつiPad等の追従性を上げる判定しきい値
+                if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                    isDragging = true;
+                }
+
+                if (isDragging) {
+                    // iPadでの画面全体の不要なスクロール挙動を阻止
+                    if (e.cancelable) e.preventDefault();
+
+                    let newX = initialX + dx;
+                    let newY = initialY + dy;
+
+                    // 画面外へのはみ出しガード
+                    newX = Math.max(0, Math.min(window.innerWidth - btn.offsetWidth, newX));
+                    newY = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newY));
+
+                    btn.style.left = newX + 'px';
+                    btn.style.top = newY + 'px';
+                    btn.style.bottom = 'auto';
+                    btn.style.right = 'auto';
+                }
+            }
+
+            function endDrag(e) {
+                if (!dragStarted) return;
+                dragStarted = false;
+                if (!isDragging) {
+                    // ドラッグなしタップ時に即座にターゲットURLへ移行
+                    window.location.href = 'https://loilonote.app/';
+                }
+            }
+
+            // デスクトップ用
+            btn.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', doDrag);
+            document.addEventListener('mouseup', endDrag);
+
+            // iPad / タッチデバイス用 (passive: falseにすることでpreventDefaultを有効化しスクロールを抑制)
+            btn.addEventListener('touchstart', startDrag, { passive: true });
+            document.addEventListener('touchmove', doDrag, { passive: false });
+            document.addEventListener('touchend', endDrag);
+        }
     </script>
 </body>
 </html>
